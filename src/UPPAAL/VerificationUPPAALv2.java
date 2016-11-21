@@ -15,6 +15,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.jun.util.Display;
 
 import util.*;
 import bean.Automata;
@@ -35,7 +36,7 @@ public class VerificationUPPAALv2 {
     private static Automata mAutomata;
 	public static void main(String[] args) throws Exception 
 	{
-		XML2UppaalUtil xUtil = new XML2UppaalUtil(new File("UAVForXStream.xml"));
+		XML2UppaalUtil xUtil = new XML2UppaalUtil(new File("EnergeForXStream.xml"));
 		mAutomata = XML2UppaalUtil.getAutomata();
 		
 	    
@@ -44,10 +45,10 @@ public class VerificationUPPAALv2 {
 	    
 	    Iterator <Template>  templateIterator = templateList.iterator();
 	   
-	    System.out.print("请输入 最大能源Energe：");
+	    Display.println("请输入 最大能源Energe：");
 	    double maxEnerge = cin.nextDouble();
 	    
-	    System.out.print("请输入 最大资源R1 R2：");
+	    Display.println("请输入 最大资源R1 R2：");
  	    double maxR1 = cin.nextDouble();
  	    double maxR2 = cin.nextDouble();
  	    
@@ -56,7 +57,6 @@ public class VerificationUPPAALv2 {
  	    
 	    while(templateIterator.hasNext())	//遍历template
 	    {
-	    	System.out.println("\n=====================================================");
 	    	Template templateI = templateIterator.next();
 	    	map = new int [templateI.getLocationList().size()][templateI.getLocationList().size()];
 	    	remain = new double [templateI.getLocationList().size()];
@@ -81,18 +81,21 @@ public class VerificationUPPAALv2 {
 	    	EnergeOK = true;
 	    	
 	    	s.clear();
-	    	System.out.println(templateI.getName()+":");
+	    	Display.println("================================正在验证顺序图================================");
+	    	Display.println("===> 顺序图名为：" + templateI.getName()+ "\n");
+	    	
+	    	Display.println("-------------------------能耗验证-------------------------");
 	    	DFSForEnerge(0,maxEnerge,maxEnerge,s,templateI.getLocationList());
 	    	if(EnergeOK)
-	    		System.out.println("**满足能源损耗条件**\n");
+	    		Display.println("满足能源损耗条件\n");
 	    	else
-	    		System.out.println("**不满足能源损耗条件**\n");
+	    		Display.println("不满足能源损耗条件\n");
 	    	
 	    	for(int i=0;i<remain.length;i++)
-	    		System.out.println("到达状态"+i+"最小能耗为:"+df.format(maxEnerge-remain[i]));
+	    		Display.println("到达状态"+i+"最小能耗为:"+df.format(maxEnerge-remain[i])+"\n");
 	    	
-	    	System.out.println("----------------------------------");
 	    	//然后找出R1 R2 超标的	    	
+	    	Display.println("-------------------------资源验证-------------------------");
 	    	
 	    	ArrayList <Location> locationList = templateI.getLocationList();
 	    	boolean legal = true;
@@ -103,17 +106,19 @@ public class VerificationUPPAALv2 {
 	    		if(locationI.getR1() > maxR1 || locationI.getR2() > maxR2 )
 	    		{	
 	    			legal = false;
-	    			System.out.println("locationID = "+locationI.getId() + "超出资源限制！");
+	    			Display.println("locationID = "+locationI.getId() + "超出资源限制！");
 	    			for(int j=0;j<map.length;j++)
 	    				map[j][i] = 0;
+	    		} else {
+	    			Display.println("locaion:" + locationI.getName() + "满足给定资源验证条件\n");
 	    		}
 	    		i++;
 	    	}
 	    	
 	    	if(!legal)
 	    	{
-	    		System.out.println("**不满足给定资源约束**");
-	    		System.out.print("请输入要测试的起始点和终止点id(以-1结束)：");
+	    		Display.println("不满足给定资源约束\n");
+	    		Display.println("请输入要测试的起始点和终止点id(以-1结束)：");
 	    		while(cin.hasNext())
 	    		{
 	    			
@@ -125,19 +130,19 @@ public class VerificationUPPAALv2 {
 	    			
 	    			Stack<Integer> stack = new Stack<Integer>();
 					if(!DFS(start,end,stack))
-						System.out.println("没有该路径");
+						Display.println("没有该路径");
 					
-					System.out.print("请输入要测试的起始点和终止点id(以-1结束)：");
+					Display.println("请输入要测试的起始点和终止点id(以-1结束)：");
 	    		}
 	    	}
 	    	else
 	    	{
-	    		System.out.println("**满足给定资源约束**");
+	    		Display.println("满足给定资源约束\n");
 	    	}
 	    }
 	   
 	    
-	    
+	    Display.println("================================顺序图验证结束================================");
 	    
 	}
 	private static HashMap<String, Integer> indexOfLocations() {
@@ -159,7 +164,7 @@ public class VerificationUPPAALv2 {
 			if(stack.size() == 1)
 				return false;
 			
-			System.out.println(stack);
+			Display.println(stack);
 			return true;
 		}
 		for(int j=start+1;j<map.length;j++)
@@ -172,6 +177,7 @@ public class VerificationUPPAALv2 {
 		stack.pop();
 		return false;
 	}
+	
 	private static void DFSForEnerge(int i,double t1Energe, double t2Energe, Stack<Integer> stack, ArrayList<Location> locations)
 	{
 		stack.push(i);
@@ -186,9 +192,10 @@ public class VerificationUPPAALv2 {
 		if(t2Energe < 0 && t2Energe+locations.get(i).getEnerge()*locations.get(i).getT2()>=0)
 		{	
 			
-			System.out.print("超出能耗:"+df.format(t2Energe*(-1)).toString() +"--路径：");
-			System.out.println(stack);
-			
+			Display.println("超出能耗:"+df.format(t2Energe*(-1)).toString() );
+			Display.println("路径：");
+			Display.println(stack);
+			Display.println("\n");
 			EnergeOK = false;
 							
 		}

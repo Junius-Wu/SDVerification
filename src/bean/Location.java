@@ -15,60 +15,62 @@ public class Location extends Entity{
 	@XStreamAlias("final")
 	private boolean finl;
 	
-	@XStreamAlias("T1")
-	private Double T1;
-	@XStreamAlias("T2")
-	private Double T2;
-	@XStreamAlias("Energe")
-	private Double Energe;
-	@XStreamAlias("R1")
-	private Double R1;
-	@XStreamAlias("R2")
-	private Double R2;
 	
-	public Double getT1() {
+	@XStreamAlias("Energe")
+	private String Energe;
+	@XStreamAlias("R1")
+	private String R1;
+	@XStreamAlias("R2")
+	private String R2;
+	@XStreamAlias("T1")
+	private String T1;
+	@XStreamAlias("T2")
+	private String T2;
+	
+	public double getT1() {
 		if (T1 == null) {
-			return (double) 0;
+			return 0;
 		}
-		return T1;
+		return Double.valueOf(T1);
 	}
-	public void setT1(Double t1) {
+	public void setT1(String t1) {
 		T1 = t1;
 	}
-	public Double getT2() {
+	public double getT2() {
 		if (T2 == null) {
-			return (double) 0;
+			return 0;
 		}
-		return T2;
+		return Double.valueOf(T2);
 	}
-	public void setT2(Double t2) {
-		T2 = t2;
-	}
-	public Double getEnerge() {
+	
+
+	public double getEnerge() {
 		if (Energe == null) {
-			return (double) 0;
+			return 0;
 		}
-		return Energe;
+		return Double.valueOf(Energe);
 	}
-	public void setEnerge(Double energe) {
+	public double getR1() {
+		if (R1 == null) {
+			return 0;
+		}
+		return Double.valueOf(R1);
+	}
+	public double getR2() {
+		if (R2 == null) {
+			return 0;
+		}
+		return Double.valueOf(R2);
+	}
+	
+	
+	public void setEnerge(String energe) {
 		Energe = energe;
 	}
-	public Double getR1() {
-		if (R1 == null) {
-			return (double) 0;
-		}
-		return R1;
-	}
-	public void setR1(Double r1) {
+	public void setR1(String r1) {
 		R1 = r1;
 	}
-	public Double getR2() {
-		if (R2 == null) {
-			return (double) 0;
-		}
-		return R2;
-	}
-	public void setR2(Double r2) {
+	public void setR2(String r2) {
 		R2 = r2;
 	}
 	public String getId() {

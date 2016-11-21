@@ -22,9 +22,12 @@ public class Transition extends Entity{
 	private String in;
 	@XStreamAlias("out")
 	private String out;
+	
 	@XStreamAlias("RESET")
 	private String RESET;
+	
 
+	
 	public String getId() {
 		return id;
 	}
